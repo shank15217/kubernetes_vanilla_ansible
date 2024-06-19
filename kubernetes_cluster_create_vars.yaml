@@ -1,0 +1,8 @@
+# populate this file with the output from bootstraping the first kubernetes node or from extracting from bootstrap node itself
+# use extract_kubernetes_tokens.yaml playbook to extract token information
+bootstrap_ip: '192.168.35.250:6443'
+# Tokens have a 24h lifespan
+bootstrap_token: 'yu2urg.6tcz6965m6mzle9r'
+# certificate hash has 2h life span
+certificate_key: '57c5296975130531ecb897d3f18a6d664a30a2ef01ae934fb80000d6c9ded7ac'
+sha256_hash: 'f06c41098008dcb1963814f11ad7a124f1317f9e51277f6de22d76b2c903ac6'

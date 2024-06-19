@@ -1,0 +1,38 @@
+---
+- hosts: "{{ variable_host | default('pi-cluster01') }}"
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: kubeadm join gather vars (valid_bootstrap_token)
+      ansible.builtin.shell: kubeadm token create
+      args:
+        executable: /bin/bash
+      register: shell_output
+    - name: Write output to file
+      copy:
+        content: "{{ shell_output.stdout }}"
+        dest: valid_bootstrap_token.out
+        mode: 0644
+    - name: kubeadm join gather vars (certificate key)
+      ansible.builtin.shell: kubeadm init phase upload-certs --upload-certs
+      args:
+        executable: /bin/bash
+      register: out
+    - name: Write output to file
+      copy:
+        content: "{{ out.stdout }}"
+        dest: certificate_key.out
+        mode: 0644
+    - name: kubeadm join gather vars (ca cert sha256-hash)
+      ansible.builtin.shell: openssl x509 -in /etc/kubernetes/pki/ca.crt -pubkey -noout | openssl pkey -pubin -outform DER | openssl dgst -sha256
+      args:
+        executable: /bin/bash
+      register: out
+    - name: Write output to file
+      copy:
+        content: "{{ out.stdout }}"
+        dest: ca_cert_sha256_hash.out
+        mode: 0644
+
+#    - debug: var=out.stderr_lines

@@ -1,0 +1,15 @@
+---
+- hosts: picluster
+  gather_facts: yes
+  become: yes
+
+  tasks:
+
+    - name: Disable swap on Raspbian
+      lineinfile:
+        path: /etc/dphys-swapfile
+        regexp: ^CONF_SWAPSIZE
+        line: CONF_SWAPSIZE=0
+
+    - name: Reboot the server.
+      ansible.builtin.reboot:

@@ -1,0 +1,17 @@
+---
+- hosts: "{{ variable_host | default('picluster') }}"
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Perform a dist-upgrade.
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Reboot the server.
+      ansible.builtin.reboot:
+
+    - name: Remove dependencies that are no longer required.
+      ansible.builtin.apt:
+        autoremove: yes

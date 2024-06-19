@@ -1,0 +1,17 @@
+---
+- hosts: picluster
+  gather_facts: yes
+  become: yes
+
+  tasks:
+
+    - name: Upgrade RPi firmware
+      ansible.builtin.shell: /usr/bin/rpi-eeprom-update -a
+      args:
+        executable: /bin/bash
+      register: out
+
+#    - debug: var=out.stdout_lines
+
+    - name: Reboot the server.
+      ansible.builtin.reboot:

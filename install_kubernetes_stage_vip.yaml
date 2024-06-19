@@ -1,0 +1,15 @@
+---
+- hosts: picluster
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Create a manifest directory 
+      ansible.builtin.file:
+        path: /etc/kubernetes/manifests/
+        state: directory
+        mode: '0755'
+    - name: Copy kube-vip manifest to kubernetes nodes for bootstrapping cluster
+      ansible.builtin.copy:
+        src: /root/ansible_playbooks/kube-vip-noforwarder.yaml 
+        dest: /etc/kubernetes/manifests/
