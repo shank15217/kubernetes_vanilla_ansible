@@ -3,4 +3,5 @@ This project aims to create a standard kubernetes cluster using ansible playbook
 
 CNI - Cillium
 LB - Metallb
-Ingress Controller - Cillium or nginx we will find out
+Ingress Controller - Cillium mesh or nginx we will find out
+Kubernetes Dashboard
