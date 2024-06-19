@@ -1,0 +1,17 @@
+---
+- hosts: picluster
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Set containerd settings to defaults 
+      ansible.builtin.shell: /usr/bin/containerd config default > /etc/containerd/config.toml 
+
+    - name: Enable the CRI plugin to support kubernetes
+      lineinfile:
+        path: /etc/containerd/config.toml
+        search_string: SystemdCgroup
+        line: '            SystemdCgroup = true'
+
+    - name: Reboot the server.
+      ansible.builtin.reboot:
