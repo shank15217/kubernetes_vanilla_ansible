@@ -1,0 +1,16 @@
+---
+- hosts: picluster_master_nodes_without_boot_strap
+  gather_facts: yes
+  become: yes
+  serial: 1
+  vars_files:
+    - /root/kubernetes_vanilla_ansible/kubernetes_cluster_create_vars.yaml
+
+  tasks:
+    - name: Join kubernetes cluster aditional master node {{ ansible_facts["hostname"] }}
+      ansible.builtin.shell: echo "Having a nice day"
+      args:
+        executable: /bin/bash
+      register: out
+
+#    - debug: var=out.stderr_lines
