@@ -1,5 +1,6 @@
 ---
-- hosts: picluster_master_nodes_without_boot_strap
+#- hosts: picluster_master_nodes_without_boot_strap
+- hosts: picluster_worker_nodes
   gather_facts: yes
   become: yes
   serial: 1
@@ -8,7 +9,7 @@
 
   tasks:
     - name: Join kubernetes cluster aditional master node {{ ansible_facts["hostname"] }}
-      ansible.builtin.shell: echo "Having a nice day"
+      ansible.builtin.shell: echo "kubeadm join {{ bootstrap_ip }} --token {{ bootstrap_token }} --discovery-token-ca-cert-hash sha256:{{ sha256_hash }} --control-plane --certificate-key {{ certificate_key }}"
       args:
         executable: /bin/bash
       register: out
