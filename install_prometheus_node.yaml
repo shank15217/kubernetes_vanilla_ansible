@@ -1,0 +1,44 @@
+---
+- hosts: picluster
+  gather_facts: yes
+  become: yes
+  var:
+    node_version: '1.8.1' 
+    node_exporter: node_exporter-1.8.1.linux-arm64
+
+  tasks:
+    - name: Download Prometheus-Node for aarch64 
+      ansible.builtin.get_url:
+      url: https://github.com/prometheus/node_exporter/releases/download/{{node_version}}/{{node_exporter}}.tar.gz
+      dest: /root
+      mode: '0440'
+    
+    - name: Extract Prometheus-Node for aarch64 
+      ansible.builtin.shell: tar xvfz /root/{{node_exporter}}.tar.gz  
+      args:
+        executable: /bin/bash
+      register: out
+    
+    - name: Copy Prometheus-Node for aarch64 to standard linux location
+      ansible.builtin.shell: cp /root/{{node_exporter}}/node_exporter /usr/local/bin
+      args:
+        executable: /bin/bash
+      register: out
+
+    - name: Create new user to run prometheus
+      ansible.builtin.shell: useradd --no-create-home --shell /bin/false exporter
+      args:
+        executable: /bin/bash
+      register: out
+
+    - name: Change permissions of executable
+      ansible.builtin.shell: chown exporter:exporter /usr/local/bin/node_exporter
+      args:
+        executable: /bin/bash
+      register: out
+
+    - name: Create systemd script for node_exporter
+      ansible.builtin.shell: chown exporter:exporter /usr/local/bin/node_exporter
+      args:
+        executable: /bin/bash
+      register: out
