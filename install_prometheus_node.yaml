@@ -1,6 +1,6 @@
 ---
 - hosts: picluster
-  gather_facts: yes
+  gather_facts: no
   become: yes
   var:
     node_version: '1.8.1' 
@@ -9,7 +9,7 @@
   tasks:
     - name: Download Prometheus-Node for aarch64 
       ansible.builtin.get_url:
-      url: https://github.com/prometheus/node_exporter/releases/download/{{node_version}}/{{node_exporter}}.tar.gz
+      url: https://github.com/prometheus/node_exporter/releases/download/{{ node_version }}/{{ node_exporter }}.tar.gz
       dest: /root
       mode: '0440'
     
@@ -38,7 +38,6 @@
       register: out
 
     - name: Create systemd script for node_exporter
-      ansible.builtin.shell: chown exporter:exporter /usr/local/bin/node_exporter
-      args:
-        executable: /bin/bash
-      register: out
+        ansible.builtin.copy:
+        src: /root/kubernetes_vanilla_ansible/node_exporter.service 
+        dest: /etc/systemd/system/node_exporter.service  
