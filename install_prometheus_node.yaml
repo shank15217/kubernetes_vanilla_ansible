@@ -1,17 +1,16 @@
 ---
-- hosts: picluster
-  gather_facts: no
+- hosts: "{{ variable_host | default('pi-cluster01') }}"
   become: yes
-  var:
-    node_version: '1.8.1' 
+  vars:
+    node_version: 'v1.8.1' 
     node_exporter: node_exporter-1.8.1.linux-arm64
 
   tasks:
     - name: Download Prometheus-Node for aarch64 
       ansible.builtin.get_url:
-      url: https://github.com/prometheus/node_exporter/releases/download/{{ node_version }}/{{ node_exporter }}.tar.gz
-      dest: /root
-      mode: '0440'
+        url: https://github.com/prometheus/node_exporter/releases/download/{{ node_version }}/{{ node_exporter }}.tar.gz
+        dest: /root
+        mode: '0440'
     
     - name: Extract Prometheus-Node for aarch64 
       ansible.builtin.shell: tar xvfz /root/{{node_exporter}}.tar.gz  
@@ -19,25 +18,49 @@
         executable: /bin/bash
       register: out
     
+    - name: Stop node_exporter service (if upgrade, then current one needs to be stopped)
+      ansible.builtin.systemd_service:
+        state: stopped
+        name: node_exporter
+      ignore_errors: true
+
     - name: Copy Prometheus-Node for aarch64 to standard linux location
       ansible.builtin.shell: cp /root/{{node_exporter}}/node_exporter /usr/local/bin
       args:
         executable: /bin/bash
       register: out
 
-    - name: Create new user to run prometheus
+    - name: Create new user to run prometheus (if needed)
       ansible.builtin.shell: useradd --no-create-home --shell /bin/false exporter
       args:
         executable: /bin/bash
       register: out
+      ignore_errors: true
 
     - name: Change permissions of executable
       ansible.builtin.shell: chown exporter:exporter /usr/local/bin/node_exporter
-      args:
+      args:-
         executable: /bin/bash
       register: out
 
     - name: Create systemd script for node_exporter
-        ansible.builtin.copy:
+      ansible.builtin.copy:
         src: /root/kubernetes_vanilla_ansible/node_exporter.service 
-        dest: /etc/systemd/system/node_exporter.service  
+        dest: /etc/systemd/system/node_exporter.service
+
+    - name: Just force systemd to reread configs 
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+
+    - name: Enable node_exporter service and ensure it is not masked
+      ansible.builtin.systemd_service:
+        name: node_exporter
+        enabled: true
+        masked: no
+
+    - name: Start node_exporter service
+      ansible.builtin.systemd_service:
+        state: started
+        name: node_exporter
+
+#    - debug: var=out.stdout_lines
