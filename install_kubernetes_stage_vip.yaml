@@ -11,5 +11,5 @@
         mode: '0755'
     - name: Copy kube-vip manifest to kubernetes nodes for bootstrapping cluster
       ansible.builtin.copy:
-        src: /root/ansible_playbooks/kube-vip-noforwarder.yaml 
+        src: /root/kubernetes_vanilla_ansible/kube-vip-noforwarder.yaml 
         dest: /etc/kubernetes/manifests/
