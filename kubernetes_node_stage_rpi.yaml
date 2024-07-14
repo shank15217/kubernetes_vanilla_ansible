@@ -22,3 +22,12 @@
 
   - name: Install docker tools
     include_tasks: install_docker_tools.yml
+
+  - name: Install packages for kubernetes
+    include_tasks: install_kubernetes_pre.yml
+
+  - name: Update containerd settings
+    include_tasks: update_containerd_settings.yml
+
+  - name: Install kubernetes tools
+    include_tasks: install_kubernetes_tools.yml
