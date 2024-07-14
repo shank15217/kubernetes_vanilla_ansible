@@ -5,3 +5,4 @@ This project aims to create a standard kubernetes cluster using ansible playbook
 * LB - Metallb
 * Ingress Controller - Cillium mesh
 * Kubernetes Dashboard
+* Promethus Node Exporter for good node metrics
