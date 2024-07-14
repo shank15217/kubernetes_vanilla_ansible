@@ -1,0 +1,24 @@
+- hosts: picluster
+  gather_facts: no
+  become: yes
+
+  - name: Download gpg key for kubernetes
+    include_tasks: install_gpg_key.yml
+  
+  - name: Download gpg key for containerd
+    include_tasks: install_containerd_gpg_key.yml
+  
+  - name: Update all system packages
+    include_tasks: update_packages_playbook.yml
+
+  - name: Update rpi5 firmware
+    include_tasks: update_rpi_fw.yml
+
+  - name: Disable rpi5 swapfile
+    include_tasks: rpi_swap_off.yml
+
+  - name: Install prometheus node
+    include_tasks: install_prometheus_node.yml
+
+  - name: Install docker tools
+    include_tasks: install_docker_tools.yml
