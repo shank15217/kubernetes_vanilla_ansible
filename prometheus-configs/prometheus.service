@@ -1,0 +1,13 @@
+[Unit]
+Description=PromServer
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus --config.file /etc/prometheus/prometheus1.yml --web.config.file /etc/prometheus/web.yml --storage.tsdb.path /var/lib/prometheus/data
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,39 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+- job_name: x86_hosts
+  scheme: https
+  tls_config:
+    ca_file: /etc/prometheus/kovid.com.crt
+    insecure_skip_verify: true
+  basic_auth:
+    username: admin
+    password: pompi2979
+  static_configs:
+  - targets: ['wazuh01:9100']
+  - targets: ['opensearch01:9100']
+  - targets: ['opensearch02:9100']
+  - targets: ['opensearch03:9100']
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: instance
+      regex: '([^:]+)(:[0-9]+)?'
+      replacement: '${1}'
+- job_name: pi-cluster
+  static_configs:
+  - targets: ['pi-cluster01:9100']
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: instance
+      regex: '([^:]+)(:[0-9]+)?'
+      replacement: '${1}'
+- job_name: arm_hosts
+  static_configs:
+  - targets: ['stephanie:9100']
+  - targets: ['orange-pi01:9100']
+  relabel_configs:
+    - source_labels: [__address__]
+      target_label: instance
+      regex: '([^:]+)(:[0-9]+)?'
+      replacement: '${1}'
