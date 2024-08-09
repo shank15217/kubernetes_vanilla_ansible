@@ -1,0 +1,14 @@
+---
+- hosts: picluster
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: Configure boot parameters to support memory cgroups
+      lineinfile:
+        path: /boot/firmware/cmdline.txt
+        search_string: console
+        line: console=serial0,115200 console=tty1 root=PARTUUID=9a8aa65e-02 rootfstype=ext4 fsck.repair=yes rootwait quiet splash plymouth.ignore-serial-consoles cfg80211.ieee80211_regdom=US cgroup_enable=memory cgroup_memory=1
+
+    - name: Reboot the server.
+      ansible.builtin.reboot:
