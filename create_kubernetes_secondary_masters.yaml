@@ -1,6 +1,6 @@
 ---
-#- hosts: picluster_master_nodes_without_boot_strap
-- hosts: picluster_worker_nodes
+- hosts: picluster_master_nodes_without_boot_strap
+#- hosts: picluster_worker_nodes
   gather_facts: yes
   become: yes
   serial: 1
