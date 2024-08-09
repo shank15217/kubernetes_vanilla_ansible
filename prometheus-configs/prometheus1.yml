@@ -23,6 +23,12 @@ scrape_configs:
 - job_name: pi-cluster
   static_configs:
   - targets: ['pi-cluster01:9100']
+  - targets: ['pi-cluster02:9100']
+  - targets: ['pi-cluster03:9100']
+  - targets: ['pi-cluster04:9100']
+  - targets: ['pi-cluster05:9100']
+  - targets: ['pi-cluster06:9100']
+  - targets: ['pi-cluster07:9100']
   relabel_configs:
     - source_labels: [__address__]
       target_label: instance
