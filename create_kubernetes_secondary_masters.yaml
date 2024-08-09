@@ -15,7 +15,7 @@
       register: out
 
     - name: Join kubernetes cluster aditional master node {{ ansible_facts["hostname"] }}
-      ansible.builtin.shell: echo "kubeadm join {{ bootstrap_ip }} --token {{ bootstrap_token }} --discovery-token-ca-cert-hash sha256:{{ sha256_hash }} --control-plane --certificate-key {{ certificate_key }}"
+      ansible.builtin.shell: kubeadm join {{ bootstrap_ip }} --token {{ bootstrap_token }} --discovery-token-ca-cert-hash sha256:{{ sha256_hash }} --control-plane --certificate-key {{ certificate_key }}
       args:
         executable: /bin/bash
       register: out
