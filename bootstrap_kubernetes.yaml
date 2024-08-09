@@ -5,8 +5,13 @@
   vars:
     endpoint: '192.168.35.250'
 
-
   tasks:
+    - name: Pulldown latest kubernetes images
+      ansible.builtin.shell: kubeadm config images pull
+      args:
+        executable: /bin/bash
+      register: out
+
     - name: Bootstrap kubernetes cluster master node
       ansible.builtin.shell: kubeadm init --control-plane-endpoint {{ endpoint }} --upload-certs
       args:
