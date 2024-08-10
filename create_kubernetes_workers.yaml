@@ -1,0 +1,17 @@
+---
+- hosts: picluster_worker_nodes
+  gather_facts: yes
+  become: yes
+  serial: 1
+  vars_files:
+    - /root/kubernetes_vanilla_ansible/kubernetes_cluster_create_vars.yaml
+
+  tasks:
+
+    - name: Join kubernetes cluster worker node {{ ansible_facts["hostname"] }}
+      ansible.builtin.shell: kubeadm join {{ bootstrap_ip }} --token {{ bootstrap_token }} --discovery-token-ca-cert-hash sha256:{{ sha256_hash }}
+      args:
+        executable: /bin/bash
+      register: out
+
+    - debug: var=out.stderr_lines
