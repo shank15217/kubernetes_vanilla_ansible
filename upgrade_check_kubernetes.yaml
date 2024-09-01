@@ -1,0 +1,14 @@
+---
+- hosts: "{{ variable_host | default('pi-cluster01') }}"
+  gather_facts: no
+  become: yes
+  vars:
+    endpoint: '192.168.35.250'
+
+  tasks:
+    - name: See if there is an upgrade path to the kubernetes cluster
+      ansible.builtin.shell: kubeadm upgrade plan
+      args:
+        executable: /bin/bash
+      register: out
+#    - debug: var=out.stderr_lines
