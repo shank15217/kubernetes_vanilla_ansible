@@ -2,6 +2,8 @@
 - hosts: picluster
   gather_facts: no
   become: yes
+  vars:
+    sandbox_image_version: '3.9'
 
   tasks:
     - name: Set containerd settings to defaults 
@@ -12,6 +14,12 @@
         path: /etc/containerd/config.toml
         search_string: SystemdCgroup
         line: '            SystemdCgroup = true'
+
+    - name: Change sandbox image version to recommended version
+      lineinfile:
+        path: /etc/containerd/config.toml
+        search_string: sandbox_image
+        line: '    sandbox_image = "registry.k8s.io/pause:{{ sandbox_image_version }}"'
 
     - name: Reboot the server.
       ansible.builtin.reboot:
