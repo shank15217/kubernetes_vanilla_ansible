@@ -1,5 +1,5 @@
 ---
-- hosts: picluster_worker_nodes
+- hosts: picluster_worker_nodes_new
   gather_facts: yes
   become: yes
   serial: 1

@@ -1,0 +1,17 @@
+---
+- hosts: "{{ variable_host | default('pi-cluster01') }}"
+  gather_facts: no
+  become: yes
+    
+  tasks:
+
+    - name: Label nodes as workers (add new nodes in the list below)
+      ansible.builtin.shell: kubectl label node {{ item }} node-role.kubernetes.io/worker=worker
+      args:
+        executable: /bin/bash
+      register: out
+      loop:
+        - pi-cluster06
+        - pi-cluster07
+
+    - debug: var=out.stderr_lines
