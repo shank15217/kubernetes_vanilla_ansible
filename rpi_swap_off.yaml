@@ -1,5 +1,5 @@
 ---
-- hosts: picluster
+- hosts: p"{{ variable_host | default('picluster') }}"
   gather_facts: no
   become: yes
 
