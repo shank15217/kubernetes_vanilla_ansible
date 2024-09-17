@@ -13,6 +13,7 @@
         - kubelet
         - kubeadm
         - kubectl
+        - etcd-client
 
     - name: Hold kubelet
       ansible.builtin.dpkg_selections:
