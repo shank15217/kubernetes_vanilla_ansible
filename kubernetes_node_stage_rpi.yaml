@@ -39,9 +39,6 @@
         executable: /bin/bash
       register: out
 
-    - name: Reboot the server.
-      ansible.builtin.reboot:
-
     # do the same as rpi_swap_off.yaml
     - name: Disable swap on Raspbian
       lineinfile:
@@ -111,11 +108,6 @@
         name: node_exporter
 
     # do the same as install_docker_tools.yaml
-    - name: Perform a dist-upgrade.
-      ansible.builtin.apt:
-        upgrade: dist
-        update_cache: yes
-
     - name: Install required packages for containerd and docker-ce
       ansible.builtin.apt:
         name: "{{ packages }}" 
@@ -127,10 +119,6 @@
         - containerd.io
         - docker-buildx-plugin
         - docker-compose-plugin
-
-    - name: Remove dependencies that are no longer required.
-      ansible.builtin.apt:
-        autoremove: yes
 
     # do the same as install_kubernetes_pre.yaml
     - name: Install required packages for kubernetes
@@ -145,10 +133,6 @@
         - gpg
         - atop
         - sysstat
-
-    - name: Remove dependencies that are no longer required.
-      ansible.builtin.apt:
-        autoremove: yes
 
     # do the same as update_containerd_settings.yaml
     - name: Set containerd settings to defaults 
