@@ -1,6 +1,6 @@
 ---
 - hosts: "{{ variable_host | default('picluster') }}"
-  gather_facts: no
+  gather_facts: yes
   become: yes
   vars:
     kubernetes_version: 'v1.31'
