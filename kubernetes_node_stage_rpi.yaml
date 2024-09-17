@@ -5,11 +5,12 @@
     node_version: 'v1.8.2' 
     node_exporter: node_exporter-1.8.2.linux-arm64
     kubernetes_version: 'v1.31'
+    sandbox_image_version: '3.9'
 
   tasks:
     # do the same as install_gpg_key.yaml
     - name: Import gpg key from kubernetes repo
-      ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key | sudo gpg --batch --yes --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
     - name: Add kubernetes repo to host
       ansible.builtin.shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
     
@@ -24,9 +25,6 @@
       ansible.builtin.apt:
         upgrade: dist
         update_cache: yes
-
-    - name: Reboot the server.
-      ansible.builtin.reboot:
 
     - name: Remove dependencies that are no longer required.
       ansible.builtin.apt:
@@ -45,9 +43,6 @@
         path: /etc/dphys-swapfile
         regexp: ^CONF_SWAPSIZE
         line: CONF_SWAPSIZE=0
-
-    - name: Reboot the server.
-      ansible.builtin.reboot:
 
     # do the same as install_prometheus_node.yaml
     - name: Download Prometheus-Node for aarch64 
@@ -150,9 +145,6 @@
         search_string: sandbox_image
         line: '    sandbox_image = "registry.k8s.io/pause:{{ sandbox_image_version }}"'
 
-    - name: Reboot the server.
-      ansible.builtin.reboot:
-
     # do the same as install_kubernetes_tools.yaml
     - name: Install required packages for kubernetes
       ansible.builtin.apt:
@@ -183,3 +175,7 @@
     - name: Remove dependencies that are no longer required.
       ansible.builtin.apt:
         autoremove: yes
+
+    # reboot the server once
+    - name: Reboot the server.
+      ansible.builtin.reboot:
