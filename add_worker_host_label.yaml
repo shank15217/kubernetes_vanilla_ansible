@@ -11,7 +11,12 @@
         executable: /bin/bash
       register: out
       loop:
+        - pi-cluster04
+        - pi-cluster05
         - pi-cluster06
         - pi-cluster07
+        - pi-cluster08
+        - pi-cluster09
+        - pi-cluster10
 
     - debug: var=out.stderr_lines
