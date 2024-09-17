@@ -2,9 +2,11 @@
 - hosts: picluster
   gather_facts: no
   become: yes
+  vars:
+    kubernetes_version: 'v1.31'
 
   tasks:
     - name: Import gpg key from kubernetes repo
-      ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
     - name: Add kubernetes repo to host
-      ansible.builtin.shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+      ansible.builtin.shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
