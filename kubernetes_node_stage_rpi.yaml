@@ -1,33 +1,201 @@
 - hosts: "{{ variable_host | default('picluster') }}"
   gather_facts: no
   become: yes
+  vars:
+    node_version: 'v1.8.2' 
+    node_exporter: node_exporter-1.8.2.linux-arm64
+    kubernetes_version: 'v1.31'
 
-  - name: Download gpg key for kubernetes
-    include_tasks: install_gpg_key.yml
-  
-  - name: Download gpg key for containerd
-    include_tasks: install_containerd_gpg_key.yml
-  
-  - name: Update all system packages
-    include_tasks: update_packages_playbook.yml
+  tasks:
+    # do the same as install_gpg_key.yaml
+    - name: Import gpg key from kubernetes repo
+      ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    - name: Add kubernetes repo to host
+      ansible.builtin.shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+    
+    # do the same as install_containerd_gpg_key.yaml
+    - name: Import gpg key from docker repo
+      ansible.builtin.shell: curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+    - name: Add docker repo to host
+      ansible.builtin.shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   
+    # do the same as update_packages_playbook.yaml
+    - name: Perform a dist-upgrade.
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
 
-  - name: Update rpi5 firmware
-    include_tasks: update_rpi_fw.yml
+    - name: Reboot the server.
+      ansible.builtin.reboot:
 
-  - name: Disable rpi5 swapfile
-    include_tasks: rpi_swap_off.yml
+    - name: Remove dependencies that are no longer required.
+      ansible.builtin.apt:
+        autoremove: yes 
 
-  - name: Install prometheus node
-    include_tasks: install_prometheus_node.yml
+    # do the same as update_rpi_fw.yaml
+    - name: Upgrade RPi firmware
+      ansible.builtin.shell: /usr/bin/rpi-eeprom-update -a
+      args:
+        executable: /bin/bash
+      register: out
 
-  - name: Install docker tools
-    include_tasks: install_docker_tools.yml
+    - name: Reboot the server.
+      ansible.builtin.reboot:
 
-  - name: Install packages for kubernetes
-    include_tasks: install_kubernetes_pre.yml
+    # do the same as rpi_swap_off.yaml
+    - name: Disable swap on Raspbian
+      lineinfile:
+        path: /etc/dphys-swapfile
+        regexp: ^CONF_SWAPSIZE
+        line: CONF_SWAPSIZE=0
 
-  - name: Update containerd settings
-    include_tasks: update_containerd_settings.yml
+    - name: Reboot the server.
+      ansible.builtin.reboot:
 
-  - name: Install kubernetes tools
-    include_tasks: install_kubernetes_tools.yml
+    # do the same as install_prometheus_node.yaml
+    - name: Download Prometheus-Node for aarch64 
+      ansible.builtin.get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/{{ node_version }}/{{ node_exporter }}.tar.gz
+        dest: /root
+        mode: '0440'
+    
+    - name: Extract Prometheus-Node for aarch64 
+      ansible.builtin.shell: tar xvfz /root/{{node_exporter}}.tar.gz  
+      args:
+        executable: /bin/bash
+      register: out
+    
+    - name: Stop node_exporter service (if upgrade, then current one needs to be stopped)
+      ansible.builtin.systemd_service:
+        state: stopped
+        name: node_exporter
+      ignore_errors: true
+
+    - name: Copy Prometheus-Node for aarch64 to standard linux location
+      ansible.builtin.shell: cp /root/{{node_exporter}}/node_exporter /usr/local/bin
+      args:
+        executable: /bin/bash
+      register: out
+
+    - name: Create new user to run prometheus (if needed)
+      ansible.builtin.shell: useradd --no-create-home --shell /bin/false exporter
+      args:
+        executable: /bin/bash
+      register: out
+      ignore_errors: true
+
+    - name: Change permissions of executable
+      ansible.builtin.shell: chown exporter:exporter /usr/local/bin/node_exporter
+      args:
+        executable: /bin/bash
+      register: out
+
+    - name: Create systemd script for node_exporter
+      ansible.builtin.copy:
+        src: /root/kubernetes_vanilla_ansible/node_exporter.service 
+        dest: /etc/systemd/system/node_exporter.service
+
+    - name: Just force systemd to reread configs 
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+
+    - name: Enable node_exporter service and ensure it is not masked
+      ansible.builtin.systemd_service:
+        name: node_exporter
+        enabled: true
+        masked: no
+
+    - name: Start node_exporter service
+      ansible.builtin.systemd_service:
+        state: started
+        name: node_exporter
+
+    # do the same as install_docker_tools.yaml
+    - name: Perform a dist-upgrade.
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Install required packages for containerd and docker-ce
+      ansible.builtin.apt:
+        name: "{{ packages }}" 
+        state: present
+      vars:
+        packages:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+
+    - name: Remove dependencies that are no longer required.
+      ansible.builtin.apt:
+        autoremove: yes
+
+    # do the same as install_kubernetes_pre.yaml
+    - name: Install required packages for kubernetes
+      ansible.builtin.apt:
+        name: "{{ packages }}" 
+        state: present
+      vars:
+        packages:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gpg
+        - atop
+        - sysstat
+
+    - name: Remove dependencies that are no longer required.
+      ansible.builtin.apt:
+        autoremove: yes
+
+    # do the same as update_containerd_settings.yaml
+    - name: Set containerd settings to defaults 
+      ansible.builtin.shell: /usr/bin/containerd config default > /etc/containerd/config.toml 
+
+    - name: Enable the CRI plugin to support kubernetes
+      lineinfile:
+        path: /etc/containerd/config.toml
+        search_string: SystemdCgroup
+        line: '            SystemdCgroup = true'
+
+    - name: Change sandbox image version to recommended version
+      lineinfile:
+        path: /etc/containerd/config.toml
+        search_string: sandbox_image
+        line: '    sandbox_image = "registry.k8s.io/pause:{{ sandbox_image_version }}"'
+
+    - name: Reboot the server.
+      ansible.builtin.reboot:
+
+    # do the same as install_kubernetes_tools.yaml
+    - name: Install required packages for kubernetes
+      ansible.builtin.apt:
+        name: "{{ packages }}" 
+        state: present
+      vars:
+        packages:
+        - kubelet
+        - kubeadm
+        - kubectl
+        - etcd-client
+
+    - name: Hold kubelet
+      ansible.builtin.dpkg_selections:
+        name: kubelet
+        selection: hold
+
+    - name: Hold kubeadm
+      ansible.builtin.dpkg_selections:
+        name: kubeadm
+        selection: hold
+
+    - name: Hold kubectl
+      ansible.builtin.dpkg_selections:
+        name: kubectl
+        selection: hold
+
+    - name: Remove dependencies that are no longer required.
+      ansible.builtin.apt:
+        autoremove: yes
