@@ -8,5 +8,7 @@
   tasks:
     - name: Import gpg key from kubernetes repo
       ansible.builtin.shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      timeout: 5
     - name: Add kubernetes repo to host
       ansible.builtin.shell: echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/{{ kubernetes_version }}/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+      timeout: 5
