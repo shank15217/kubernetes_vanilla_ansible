@@ -4,7 +4,19 @@
   become: yes
 
   tasks:
-    - name: Configure boot parameters to support memory cgroups
+
+    - name: Check whether /boot/firmware/cmdline.txt contains "cgroup_memory"
+      command: grep -Fxq "cgroup_memory" /boot/firmware/cmdline.txt
+      register: checkmyconf
+      check_mode: no
+      ignore_errors: yes
+      changed_when: no
+
+    - name: greet
+      debug: msg="Hello, world!"
+      when: checkmyconf.rc == 0
+
+    - name: Configure boot parameters to support memory cgroups (WARNING NOT IDEMPOTENT!!!)
       lineinfile:
         path: /boot/firmware/cmdline.txt
         backrefs: yes
