@@ -6,7 +6,7 @@
   tasks:
 
     - name: Check whether /boot/firmware/cmdline.txt contains "cgroup_memory"
-      command: grep -Fxq "cgroup_memory" /boot/firmware/cmdline.txt
+      command: grep "cgroup_memory" /boot/firmware/cmdline.txt
       register: checkmyconf
       check_mode: no
       ignore_errors: yes
