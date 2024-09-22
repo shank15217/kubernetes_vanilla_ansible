@@ -12,11 +12,7 @@
       ignore_errors: yes
       changed_when: no
 
-    - name: greet
-      debug: msg="Hello, world!"
-      when: checkmyconf.rc == 1
-
-    - name: Configure boot parameters to support memory cgroups (WARNING NOT IDEMPOTENT!!!)
+    - name: Configure boot parameters to support memory cgroups if returncode is 1 or failed from task above
       when: checkmyconf.rc == 1
       lineinfile:
         path: /boot/firmware/cmdline.txt
