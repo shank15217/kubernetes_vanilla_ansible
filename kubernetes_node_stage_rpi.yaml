@@ -177,12 +177,21 @@
         autoremove: yes
 
     # do the same as update_boot_config.yaml
-    - name: Configure boot parameters to support memory cgroups
+    - name: Check whether /boot/firmware/cmdline.txt contains "cgroup_memory"
+      command: grep "cgroup_memory" /boot/firmware/cmdline.txt
+      register: checkmyconf
+      check_mode: no
+      ignore_errors: yes
+      changed_when: no
+
+    - name: Configure boot parameters to support memory cgroups if returncode is 1 or failed from task above
+      when: checkmyconf.rc == 1
       lineinfile:
         path: /boot/firmware/cmdline.txt
         backrefs: yes
-        regexp: "^(.*serial-consoles.*)$"
+        regexp: "^(.*serial.*)$"
         line: '\1 cgroup_enable=memory cgroup_memory=1'
+        state: present
 
     # reboot the server once
     - name: Reboot the server.
