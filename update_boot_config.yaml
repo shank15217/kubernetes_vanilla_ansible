@@ -14,10 +14,10 @@
 
     - name: greet
       debug: msg="Hello, world!"
-      when: checkmyconf.rc == 0
+      when: checkmyconf.rc == 1
 
     - name: Configure boot parameters to support memory cgroups (WARNING NOT IDEMPOTENT!!!)
-      when: checkmyconf.rc == 0
+      when: checkmyconf.rc == 1
       lineinfile:
         path: /boot/firmware/cmdline.txt
         backrefs: yes
