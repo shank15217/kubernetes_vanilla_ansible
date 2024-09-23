@@ -12,12 +12,9 @@
 
     - name: Reboot the server.
       ansible.builtin.reboot:
+        reboot_command: systemctl reboot
+        boot_time_command: uptime | cut -d ' ' -f 5
 
     - name: Remove dependencies that are no longer required.
       ansible.builtin.apt:
         autoremove: yes
-
-    - name: Reboot the server.
-      ansible.builtin.reboot:
-        reboot_command: systemctl reboot
-        boot_time_command: uptime | cut -d ' ' -f 5
