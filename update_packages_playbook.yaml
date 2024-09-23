@@ -2,7 +2,7 @@
 - hosts: "{{ variable_host | default('picluster') }}"
   gather_facts: no
   become: yes
-  serial: 1
+  serial: 5
 
   tasks:
     - name: Perform a dist-upgrade.
