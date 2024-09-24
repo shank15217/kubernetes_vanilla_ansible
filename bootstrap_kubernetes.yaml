@@ -12,10 +12,18 @@
         executable: /bin/bash
       register: out
 
+    - name: Create a manifest directory 
+      ansible.builtin.file:
+        path: /etc/kubernetes/manifests/
+        state: directory
+        mode: '0755'
+    - name: Copy kube-vip manifest to kubernetes nodes for bootstrapping cluster
+      ansible.builtin.copy:
+        src: /root/kubernetes_vanilla_ansible/kube-vip-noforwarder.yaml 
+        dest: /etc/kubernetes/manifests/
+
     - name: Bootstrap kubernetes cluster master node
       ansible.builtin.shell: kubeadm init --control-plane-endpoint {{ endpoint }} --upload-certs
       args:
         executable: /bin/bash
       register: out
-
-#    - debug: var=out.stderr_lines

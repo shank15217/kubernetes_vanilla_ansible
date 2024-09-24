@@ -1,5 +1,5 @@
 ---
-- hosts: "{{ variable_host | default('picluster') }}"
+- hosts: "{{ variable_host | default('picluster_master_nodes') }}"
   gather_facts: yes
   become: yes
 
