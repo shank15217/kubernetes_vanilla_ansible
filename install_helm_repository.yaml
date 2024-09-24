@@ -8,7 +8,7 @@
       ansible.builtin.shell: curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
     - name: Add helm repo to host
       ansible.builtin.shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-    - name: Perform a dist-upgrade.
+    - name: Perform an repo update
       ansible.builtin.shell: apt-get update
     - name: Install helm pre-req
       ansible.builtin.dpkg_selections:
