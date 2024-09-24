@@ -1,0 +1,10 @@
+---
+- hosts: "{{ variable_host | default('picluster_master_nodes') }}"
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: Import gpg key from helm repo
+      ansible.builtin.shell: curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+    - name: Add helm repo to host
+      ansible.builtin.shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
