@@ -2,7 +2,7 @@
 # use extract_kubernetes_tokens.yaml playbook to extract token information
 bootstrap_ip: '192.168.35.250:6443'
 # Tokens have a 24h lifespan
-bootstrap_token: 'fvxfmm.znn8kp2nvwa48gli'
+bootstrap_token: 'l9j2lb.mwj4eto7kz58sv1u'
 # certificate hash has 2h life span
-certificate_key: 'b17bf5997b25551c00894a88cca77dd7d4794d09094287f05990e7cdb3e73e2b'
-sha256_hash: 'f06c41098008dcb1963814f11ad7a124f1317f9e51277f6de22d76b2c903ac6c'
+certificate_key: '572e8b2b4dae21149ea876f0855a96dd1ff2d1ea6b22230643e6bd83e52a5347'
+sha256_hash: '13e5a4f8187ffc468cfaedcaf20329574ea7f3cd626c3d35a9dc29f6013b6343'
