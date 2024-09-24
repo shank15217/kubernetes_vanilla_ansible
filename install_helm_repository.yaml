@@ -14,7 +14,5 @@
       ansible.builtin.dpkg_selections:
         name: apt-transport-https
         selection: install
-    - name: Install helm
-      ansible.builtin.dpkg_selections:
-        name: helm
-        selection: install
+    - name: Install Helm
+      ansible.builtin.shell: apt-get install helm
