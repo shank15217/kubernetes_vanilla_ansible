@@ -3,7 +3,7 @@
   gather_facts: no
   become: yes
   vars:
-    sandbox_image_version: '3.9'
+    sandbox_image_version: '3.10'
 
   tasks:
     - name: Set containerd settings to defaults 
