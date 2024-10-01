@@ -20,8 +20,6 @@ Local Storage for cluster
 
 Example ansible hostfile with server host names. SSH passwordless login must be configured for each machine.
 
-
-
 ```yaml
 # 10 Node cluster, 3 control plane nodes, 7 worker nodes
 # Configure host lists for different roles.
@@ -59,3 +57,9 @@ picluster_worker_nodes:
     pi-cluster09:
     pi-cluster10:
 ```
+
+## Installation steps
+
+### Install prerequisite packages
+
+
