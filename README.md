@@ -58,6 +58,15 @@ picluster_worker_nodes:
     pi-cluster10:
 ```
 
+## Component versions table
+
+Table to track different versions of components in the playbooks and update as needed
+
+| Component  | Version |
+| ------------- | ------------- |
+| Kubernetes  | 1.31  |
+| Cillium  | 1.16.2  |
+
 ## Installation steps
 
 ### Install prerequisite packages
