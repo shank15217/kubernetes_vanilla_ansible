@@ -66,7 +66,7 @@ Table to track different versions of components in the playbooks and update as n
 | ------------- | ------------- |
 | Kubernetes  | 1.31  |
 | kube-vip  | 0.8.3  |
-| Cillium  | 1.16.2  |
+| Cillium  | 1.16.3  |
 | Sandbox Image  | 3.10  |
 | Node Exporter  | 1.8.2  |
 
@@ -74,4 +74,27 @@ Table to track different versions of components in the playbooks and update as n
 
 ### Install prerequisite packages
 
+```console
+cd kubernetes_vanilla_ansible
+ansible-playbook kubernetes_node_stage_rpi.yaml
+```
+
+### Install bootstrap control node
+
+```console
+cd kubernetes_vanilla_ansible
+ansible-playbook bootstrap_kubernetes.yaml
+```
+
+### Install second and third control nodes
+
+### Install worker nodes
+
+### Verify installation
+
+### Install Cillium CNI with Ingress and LB support
+
+### Configure LB pool
+
+### Configure NFS CSI
 
