@@ -64,7 +64,7 @@ Table to track different versions of components in the playbooks and update as n
 
 | Component  | Version |
 | ------------- | ------------- |
-| Kubernetes  | 1.31  |
+| Kubernetes  | 1.31.1  |
 | kube-vip  | 0.8.3  |
 | Cillium  | 1.16.3  |
 | Sandbox Image  | 3.10  |
@@ -168,3 +168,13 @@ W1019 22:12:26.324341   25555 configset.go:78] Warning: No kubeproxy.config.k8s.
   pi-cluster01               : ok=1    changed=1    unreachable=0    failed=0    rescued=0    ignored=0
 ```
 
+If the suggestion is to update the cluster then run the following on a control node 
+
+```console
+kubeadm upgrade apply v1.31.1
+```
+If the above command returns successfully then run following on the other control nodes
+
+```console
+kubeadm upgrade node
+```
