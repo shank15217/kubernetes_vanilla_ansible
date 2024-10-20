@@ -98,3 +98,73 @@ ansible-playbook bootstrap_kubernetes.yaml
 
 ### Configure NFS CSI
 
+## Upgrade kubernetes (minor verions)
+
+### Check for upgrades
+
+```console
+cd kubernetes_vanilla_ansible
+ansible-playbook upgrade_check_kubernetes.yaml
+```
+Example output
+
+```console
+
+Executing playbook upgrade_check_kubernetes.yaml
+
+- pi-cluster01 on hosts: pi-cluster01 -
+See if there is an upgrade path to the kubernetes cluster...
+[WARNING]: Platform linux on host pi-cluster01 is using the discovered Python interpreter at /usr/bin/python3.11, but future installation of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-core/2.17/reference_appendices/interpreter_discovery.html for more information.
+  pi-cluster01 done | stdout: [preflight] Running pre-flight checks.
+[upgrade/config] Reading configuration from the cluster...
+[upgrade/config] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+[upgrade] Running cluster health checks
+[upgrade] Fetching available versions to upgrade to
+[upgrade/versions] Cluster version: 1.31.0
+[upgrade/versions] kubeadm version: v1.31.1
+[upgrade/versions] Target version: v1.31.1
+[upgrade/versions] Latest version in the v1.31 series: v1.31.1
+
+Components that must be upgraded manually after you have upgraded the control plane with 'kubeadm upgrade apply':
+COMPONENT   NODE      CURRENT   TARGET
+
+Upgrade to the latest version in the v1.31 series:
+
+COMPONENT                 NODE           CURRENT    TARGET
+kube-apiserver            pi-cluster01   v1.31.0    v1.31.1
+kube-apiserver            pi-cluster02   v1.31.0    v1.31.1
+kube-apiserver            pi-cluster03   v1.31.0    v1.31.1
+kube-controller-manager   pi-cluster01   v1.31.0    v1.31.1
+kube-controller-manager   pi-cluster02   v1.31.0    v1.31.1
+kube-controller-manager   pi-cluster03   v1.31.0    v1.31.1
+kube-scheduler            pi-cluster01   v1.31.0    v1.31.1
+kube-scheduler            pi-cluster02   v1.31.0    v1.31.1
+kube-scheduler            pi-cluster03   v1.31.0    v1.31.1
+kube-proxy                               1.31.0     v1.31.1
+CoreDNS                                  v1.11.3    v1.11.3
+etcd                      pi-cluster01   3.5.15-0   3.5.15-0
+etcd                      pi-cluster02   3.5.15-0   3.5.15-0
+etcd                      pi-cluster03   3.5.15-0   3.5.15-0
+
+You can now apply the upgrade by executing the following command:
+
+        kubeadm upgrade apply v1.31.1
+
+_____________________________________________________________________
+
+
+The table below shows the current state of component configs as understood by this version of kubeadm.
+Configs that have a "yes" mark in the "MANUAL UPGRADE REQUIRED" column require manual config upgrade or
+resetting to kubeadm defaults before a successful upgrade can be performed. The version to manually
+upgrade to is denoted in the "PREFERRED VERSION" column.
+
+API GROUP                 CURRENT VERSION   PREFERRED VERSION   MANUAL UPGRADE REQUIRED
+kubeproxy.config.k8s.io   -                 v1alpha1            no
+kubelet.config.k8s.io     v1beta1           v1beta1             no
+_____________________________________________________________________ | stderr: W1019 22:12:20.888168   25555 configset.go:78] Warning: No kubeproxy.config.k8s.io/v1alpha1 config is loaded. Continuing without it: configmaps "kube-proxy" not found
+W1019 22:12:26.324341   25555 configset.go:78] Warning: No kubeproxy.config.k8s.io/v1alpha1 config is loaded. Continuing without it: configmaps "kube-proxy" not found
+
+- Play recap -
+  pi-cluster01               : ok=1    changed=1    unreachable=0    failed=0    rescued=0    ignored=0
+```
+
