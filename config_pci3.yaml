@@ -1,0 +1,17 @@
+- hosts: picluster_worker_nodes
+  gather_facts: yes
+  become: yes
+  
+  tasks:
+
+    - name: Update pci configuration {{ ansible_facts["hostname"] }} step 1
+        lineinfile:
+          line: "dtparam=pciex1"
+          dest: "/boot/firmware/config.txt"
+
+    - name: Update pci configuration {{ ansible_facts["hostname"] }} step 2
+        lineinfile:
+          line: "dtparam=pciex1_gen=3"
+          dest: "/boot/firmware/config.txt"
+
+    - debug: var=out.stderr_lines
