@@ -11,5 +11,5 @@
 
     - name: Update pci configuration {{ ansible_facts["hostname"] }} step 2
       lineinfile:
-        line: "dtparam=pciex1_gen=3"
+        line: "dtparam=pciex1_gen=2"
         dest: "/boot/firmware/config.txt"
