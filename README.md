@@ -182,7 +182,12 @@ If the suggestion is to update the cluster then run the following on a control n
 kubeadm upgrade apply v1.31.1
 ```
 If the above command returns successfully then run following on the other control nodes
+Note: Before running updates on the node reboot it so that API vip is moved to another node, this way the upgrade may run faster and with less errors.
 
 ```console
 kubeadm upgrade node
+```
+
+```console
+systemctl daemon-reload; systemctl restart kubelet
 ```
