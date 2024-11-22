@@ -100,6 +100,14 @@ ansible-playbook bootstrap_kubernetes.yaml
 
 ## Upgrade kubernetes (minor verions)
 
+Get the latest kubernetes client tools
+
+### 
+```console
+cd kubernetes_vanilla_ansible
+ansible-playbook upgrade_kubernetes_tools.yaml
+```
+
 ### Check for upgrades
 
 ```console
