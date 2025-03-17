@@ -64,11 +64,50 @@ Table to track different versions of components in the playbooks and update as n
 
 | Component  | Version |
 | ------------- | ------------- |
-| Kubernetes  | 1.31.1  |
+| Kubernetes  | 1.31.7  |
 | kube-vip  | 0.8.4  |
 | Cillium  | 1.16.3  |
 | Sandbox Image  | 3.10  |
 | Node Exporter  | 1.8.2  |
+
+To get the latest version of sandbox iamge use the following command to list the tags.
+
+```console
+user@bastion:~# skopeo list-tags docker://registry.k8s.io/pause
+{
+    "Repository": "registry.k8s.io/pause",
+    "Tags": [
+        "0.8.0",
+        "1.0",
+        "2.0",
+        "3.0",
+        "3.1",
+        "3.10",
+        "3.2",
+        "3.3",
+        "3.4.1",
+        "3.5",
+        "3.6",
+        "3.7",
+        "3.8",
+        "3.9",
+        "go",
+        "latest",
+        "sha256-193fcedcfac410b3484b96f06c8a2cf750bcdb60b44b914798ec74b0ab8fb730.sig",
+        "sha256-41ff8c30d6555f5dd6991884d258d7c24b9aeee2d2b75eaa24391f9c702da04b.sig",
+        "sha256-7031c1b283388d2c2e09b57badb803c05ebed362dc88d84b480cc47f72a21097.sig",
+        "sha256-7c38f24774e3cbd906d2d33c38354ccf787635581c122965132c9bd309754d4a.sig",
+        "sha256-89e51d7a4cb6a0436b23d34d28ee4ed16721a6853c4b76177c552d7d0ca4b8a7.sig",
+        "sha256-8a5fb194104a55b306eecde523eeebcb12d46d7e4990fc9c1a78f8265efc1ced.sig",
+        "sha256-9001185023633d17a2f98ff69b6ff2615b8ea02a825adffa40422f51dfdcde9d.sig",
+        "sha256-e3ecdc4b6bd38ce47123195d566292581080abbb51b80603a9168f84fef0d1a2.sig",
+        "sha256-e50b7059b633caf3c1449b8da680d11845cda4506b513ee7a2de00725f0a34a7.sig",
+        "sha256-ee6521f290b2168b6e0935a181d4cff9be1ac3f505666ef0e3c98fae8199917a.sig",
+        "test",
+        "test2"
+    ]
+}
+```
 
 ## Installation steps
 
