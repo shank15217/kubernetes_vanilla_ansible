@@ -109,6 +109,22 @@ user@bastion:~# skopeo list-tags docker://registry.k8s.io/pause
 }
 ```
 
+To update to the latest version of cillium use the following commmand
+
+```console
+cilium upgrade \
+  --version v1.17.2 \
+  --set kubeProxyReplacement=true \
+  --set l2announcements.enabled=true \
+  --set l2announcements.leaseDuration="3s" \
+  --set l2announcements.leaseRenewDeadline="1s" \
+  --set l2announcements.leaseRetryPeriod="500ms" \
+  --set externalIPs.enabled=true \
+  --set operator.replicas=2 \
+  --set ingressController.loadbalancerMode=dedicated \
+  --set ingressController.enabled=true
+```
+
 ## Installation steps
 
 ### Install prerequisite packages
