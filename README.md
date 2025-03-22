@@ -66,7 +66,7 @@ Table to track different versions of components in the playbooks and update as n
 | ------------- | ------------- |
 | Kubernetes  | 1.31.7  |
 | kube-vip  | 0.8.9  |
-| Cillium  | 1.16.3  |
+| Cillium  | 1.17.2  |
 | Sandbox Image  | 3.10  |
 | Node Exporter  | 1.8.2  |
 
