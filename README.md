@@ -113,7 +113,7 @@ To update to the latest version of cillium use the following commmand
 
 ```console
 cilium upgrade \
-  --version v1.17.2 \
+  --version v1.17.4 \
   --set kubeProxyReplacement=true \
   --set l2announcements.enabled=true \
   --set l2announcements.leaseDuration="3s" \

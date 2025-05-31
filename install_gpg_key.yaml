@@ -3,7 +3,7 @@
   gather_facts: yes
   become: yes
   vars:
-    kubernetes_version: 'v1.31'
+    kubernetes_version: 'v1.33'
 
   tasks:
     - name: Import gpg key from kubernetes repo

@@ -2,8 +2,8 @@
 - hosts: "{{ variable_host | default('picluster') }}"
   become: yes
   vars:
-    node_version: 'v1.8.2' 
-    node_exporter: node_exporter-1.8.2.linux-arm64
+    node_version: 'v1.9.1' 
+    node_exporter: node_exporter-1.9.1.linux-arm64
 
   tasks:
     - name: Download Prometheus-Node for aarch64 
