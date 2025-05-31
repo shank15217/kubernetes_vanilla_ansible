@@ -64,11 +64,11 @@ Table to track different versions of components in the playbooks and update as n
 
 | Component  | Version |
 | ------------- | ------------- |
-| Kubernetes  | 1.31.7  |
-| kube-vip  | 0.8.9  |
-| Cillium  | 1.17.2  |
+| Kubernetes  | 1.31.9  |
+| kube-vip  | 0.9.1  |
+| Cillium  | 1.17.4  |
 | Sandbox Image  | 3.10  |
-| Node Exporter  | 1.8.2  |
+| Node Exporter  | 1.9.1  |
 
 To get the latest version of sandbox iamge use the following command to list the tags.
 
